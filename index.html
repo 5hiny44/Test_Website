@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <title>~~WebSite Trainning~~</title>
+    
+    <head>
+        <script>
+            function processFormData() {
+                const nameElement = document.getElementById("name");
+                const name = nameElement.value;
+                const emailElement = document.getElementById("email");
+                const email = emailElement.value;
+                alert("你的姓名是 " + name + "\n電子郵件是 " + email);
+            }
+            function processFormDataByForm() {
+                const nameElement = document.getElementById("name");
+                const name = nameElement.value;
+                const emailElement = document.getElementById("email");
+                const email = emailElement.value;
+                alert("你的姓名是 " + name + "\n電子郵件是 " + email);
+            }
+            function getUri() {
+                let url = new URL()
+            }
+        </script>
+    </head>
+
+    <body>
+        <h1>Hello World~!!!</h1>
+        <div>
+            <input value="顯示資料" type="button" onclick="processFormData()">
+        </div>
+        <div>
+            <form name='form' id='form'>
+                <label for='name'>姓名：</label>
+                <input type='text' name='name' id='name' /> </br>
+                <label for='email'>E-mail：</label>
+                <input type='text' name='email' id='email' /></br>
+                <input type='submit' value='送出'/>
+            </form>
+        </div>
+        <div>
+            <input value="按鈕submit 沒有form" type="submit" onclick="window.open(
+                'https://www.google.com/',
+                '_blank' // <- This is what makes it open in a new window.
+            );">
+            <form action="https://www.google.com/" method="get" target="blank">
+                <input value="按鈕submit 有form" type="submit">
+            </form>
+            <form action="https://www.google.com/" method="get" target="blank">
+                <input value="按鈕button 有form" type="button" onclick="myFunction()">
+            </form>
+            <form action="https://www.google.com/" method="get" target="blank">
+                <input value="按鈕submit 有form有script" type="submit" onclick="myFunction()">
+            </form>
+        </div>
+        <form action="">
+            <label for="search">搜尋內容: </label>
+            <input id="search" name="search" placeholder="請輸入">
+            <input type="submit" value="搜尋">
+        </form>
+        <form action="">
+            </br></br>
+            <label for="male">Male</label>
+            <input type="radio" name="gender" id="male1" value="male"><br>
+            <label for="female">Female</label>
+            <input type="radio" name="gender" id="female" value="female"><br>
+            <label for="other">Other</label>
+            <input type="radio" name="gender" id="other" value="other"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <script>
+            function myFunction() {
+                for(let n = 0; n < 100; n++) {
+                    console.log(n);
+                }
+            }
+        </script>
+    </body>
+</html>
