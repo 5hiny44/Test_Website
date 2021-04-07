@@ -1,10 +1,6 @@
 
-<<<<<<< HEAD
   這是一份純文字
 
   Hello World.
 
   Hello, too.
-=======
-  這是一份純文字
->>>>>>> parent of 9b9a5fd (add message "hello world.".)
