@@ -184,8 +184,8 @@
         // Make sure the client is loaded and sign-in is complete before calling this method.
         function execute() {
             return gapi.client.sheets.spreadsheets.values.get({
-                "spreadsheetId": "1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY",
-                "range": "傷害數據!A4:J20"
+                "spreadsheetId": "1gEBT3SPPBMhSwK53Wj_CpOJUs8zhlGjUDkGxRr9BhgU",
+                "range": "距離數據!A4:J20"
             })
                 .then(function (response) {
                     // Handle the results here (response.result has the parsed body).
