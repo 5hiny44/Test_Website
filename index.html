@@ -3,255 +3,254 @@
 <title>~~WebSite Trainning~~</title>
 
 <head>
-    <title>Google Sheets API Quickstart</title>
-    <meta charset="utf-8" />
-    <script>
-        function getSheet() {
-            fetch('https://sheets.googleapis.com/v4/spreadsheets/1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY/values/A4%3AJ10')
-                .then(function (data) {
-                    console.log(data);
-                });
-        }
-        function processFormData() {
-            const nameElement = document.getElementById("name");
-            const name = nameElement.value;
-            const emailElement = document.getElementById("email");
-            const email = emailElement.value;
-            alert("你的姓名是 " + name + "\n電子郵件是 " + email);
-        }
-        function processFormDataByForm() {
-            const nameElement = document.getElementById("name");
-            const name = nameElement.value;
-            const emailElement = document.getElementById("email");
-            const email = emailElement.value;
-            alert("你的姓名是 " + name + "\n電子郵件是 " + email);
-        }
-        function getUri() {
-            let url = new URL()
-        }
-    </script>
+  <title>Google Sheets API Quickstart</title>
+  <meta charset="utf-8" />
+  <script>
+    function getSheet() {
+      fetch('https://sheets.googleapis.com/v4/spreadsheets/1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY/values/A4%3AJ10')
+        .then(function (data) {
+          console.log(data);
+        });
+    }
+    function processFormData() {
+      const nameElement = document.getElementById("name");
+      const name = nameElement.value;
+      const emailElement = document.getElementById("email");
+      const email = emailElement.value;
+      alert("你的姓名是 " + name + "\n電子郵件是 " + email);
+    }
+    function processFormDataByForm() {
+      const nameElement = document.getElementById("name");
+      const name = nameElement.value;
+      const emailElement = document.getElementById("email");
+      const email = emailElement.value;
+      alert("你的姓名是 " + name + "\n電子郵件是 " + email);
+    }
+    function getUri() {
+      let url = new URL()
+    }
+  </script>
 </head>
 
 <body>
-    <h1>Hello World~!!!</h1>
+  <h1>Hello World~!!!</h1>
 
-    <p>Google Sheets API Quickstart</p>
+  <p>Google Sheets API Quickstart</p>
 
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
+  <!--Add buttons to initiate auth sequence and sign out-->
+  <button id="authorize_button" style="display: none;">Authorize</button>
+  <button id="signout_button" style="display: none;">Sign Out</button>
 
-    <pre id="content" style="white-space: pre-wrap;"></pre>
+  <pre id="content" style="white-space: pre-wrap;"></pre>
 
-    <script type="text/javascript">
-      // Client ID and API key from the Developer Console
-      var CLIENT_ID = '663309116969-jahg0ccje82k7p97li09t0rcfcbn2l7b.apps.googleusercontent.com';
-      var API_KEY = 'AIzaSyA3mzTtAGCYSoeXscjzb-8XoDUi4v0eUM0';
+  <script type="text/javascript">
+    // Client ID and API key from the Developer Console
+    var CLIENT_ID = '663309116969-jahg0ccje82k7p97li09t0rcfcbn2l7b.apps.googleusercontent.com';
+    var API_KEY = 'AIzaSyA3mzTtAGCYSoeXscjzb-8XoDUi4v0eUM0';
 
-      // Array of API discovery doc URLs for APIs used by the quickstart
-      var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+    // Array of API discovery doc URLs for APIs used by the quickstart
+    var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 
-      // Authorization scopes required by the API; multiple scopes can be
-      // included, separated by spaces.
-      var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
+    // Authorization scopes required by the API; multiple scopes can be
+    // included, separated by spaces.
+    var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
 
-      var authorizeButton = document.getElementById('authorize_button');
-      var signoutButton = document.getElementById('signout_button');
+    var authorizeButton = document.getElementById('authorize_button');
+    var signoutButton = document.getElementById('signout_button');
 
-      /**
-       *  On load, called to load the auth2 library and API client library.
-       */
-      function handleClientLoad() {
-        gapi.load('client:auth2', initClient);
+    /**
+     *  On load, called to load the auth2 library and API client library.
+     */
+    function handleClientLoad() {
+      gapi.load('client:auth2', initClient);
+    }
+
+    /**
+     *  Initializes the API client library and sets up sign-in state
+     *  listeners.
+     */
+    function initClient() {
+      gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: DISCOVERY_DOCS,
+        scope: SCOPES
+      }).then(function () {
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;
+      }, function (error) {
+        appendPre(JSON.stringify(error, null, 2));
+      });
+    }
+
+    /**
+     *  Called when the signed in status changes, to update the UI
+     *  appropriately. After a sign-in, the API is called.
+     */
+    function updateSigninStatus(isSignedIn) {
+      if (isSignedIn) {
+        authorizeButton.style.display = 'none';
+        signoutButton.style.display = 'block';
+        listMajors();
+      } else {
+        authorizeButton.style.display = 'block';
+        signoutButton.style.display = 'none';
       }
+    }
 
-      /**
-       *  Initializes the API client library and sets up sign-in state
-       *  listeners.
-       */
-      function initClient() {
-        gapi.client.init({
-          apiKey: API_KEY,
-          clientId: CLIENT_ID,
-          discoveryDocs: DISCOVERY_DOCS,
-          scope: SCOPES
-        }).then(function () {
-          // Listen for sign-in state changes.
-          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    /**
+     *  Sign in the user upon button click.
+     */
+    function handleAuthClick(event) {
+      gapi.auth2.getAuthInstance().signIn();
+    }
 
-          // Handle the initial sign-in state.
-          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-          authorizeButton.onclick = handleAuthClick;
-          signoutButton.onclick = handleSignoutClick;
-        }, function(error) {
-          appendPre(JSON.stringify(error, null, 2));
-        });
-      }
+    /**
+     *  Sign out the user upon button click.
+     */
+    function handleSignoutClick(event) {
+      gapi.auth2.getAuthInstance().signOut();
+    }
 
-      /**
-       *  Called when the signed in status changes, to update the UI
-       *  appropriately. After a sign-in, the API is called.
-       */
-      function updateSigninStatus(isSignedIn) {
-        if (isSignedIn) {
-          authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
-          listMajors();
-        } else {
-          authorizeButton.style.display = 'block';
-          signoutButton.style.display = 'none';
-        }
-      }
+    /**
+     * Append a pre element to the body containing the given message
+     * as its text node. Used to display the results of the API call.
+     *
+     * @param {string} message Text to be placed in pre element.
+     */
+    function appendPre(message) {
+      var pre = document.getElementById('content');
+      var textContent = document.createTextNode(message + '\n');
+      pre.appendChild(textContent);
+    }
 
-      /**
-       *  Sign in the user upon button click.
-       */
-      function handleAuthClick(event) {
-        gapi.auth2.getAuthInstance().signIn();
-      }
-
-      /**
-       *  Sign out the user upon button click.
-       */
-      function handleSignoutClick(event) {
-        gapi.auth2.getAuthInstance().signOut();
-      }
-
-      /**
-       * Append a pre element to the body containing the given message
-       * as its text node. Used to display the results of the API call.
-       *
-       * @param {string} message Text to be placed in pre element.
-       */
-      function appendPre(message) {
-        var pre = document.getElementById('content');
-        var textContent = document.createTextNode(message + '\n');
-        pre.appendChild(textContent);
-      }
-
-      /**
-       * Print the names and majors of students in a sample spreadsheet:
-       * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-       */
-      function listMajors() {
-        gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-          range: 'Class Data!A2:E',
-        }).then(function(response) {
-          var range = response.result;
-          if (range.values.length > 0) {
-            appendPre('Name, Major:');
-            for (i = 0; i < range.values.length; i++) {
-              var row = range.values[i];
-              // Print columns A and E, which correspond to indices 0 and 4.
-              appendPre(row[0] + ', ' + row[4]);
-            }
-          } else {
-            appendPre('No data found.');
+    /**
+     * Print the names and majors of students in a sample spreadsheet:
+     * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+     */
+    function listMajors() {
+      gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+        range: 'Class Data!A2:E',
+      }).then(function (response) {
+        var range = response.result;
+        if (range.values.length > 0) {
+          appendPre('Name, Major:');
+          for (i = 0; i < range.values.length; i++) {
+            var row = range.values[i];
+            // Print columns A and E, which correspond to indices 0 and 4.
+            appendPre(row[0] + ', ' + row[4]);
           }
-        }, function(response) {
-          appendPre('Error: ' + response.result.error.message);
-        });
-      }
+        } else {
+          appendPre('No data found.');
+        }
+      }, function (response) {
+        appendPre('Error: ' + response.result.error.message);
+      });
+    }
 
+  </script>
+
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
 
-    <script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    /**
+     * Sample JavaScript code for sheets.spreadsheets.values.get
+     * See instructions for running APIs Explorer code samples locally:
+     * https://developers.google.com/explorer-help/guides/code_samples#javascript
+     */
 
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-        /**
-         * Sample JavaScript code for sheets.spreadsheets.values.get
-         * See instructions for running APIs Explorer code samples locally:
-         * https://developers.google.com/explorer-help/guides/code_samples#javascript
-         */
+    function authenticate() {
+      return gapi.auth2.getAuthInstance()
+        .signIn({ scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/spreadsheets.readonly" })
+        .then(function () { console.log("Sign-in successful"); },
+          function (err) { console.error("Error signing in", err); });
+    }
+    function loadClient() {
+      gapi.client.setApiKey("YOUR_API_KEY");
+      return gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4")
+        .then(function () { console.log("GAPI client loaded for API"); },
+          function (err) { console.error("Error loading GAPI client for API", err); });
+    }
+    // Make sure the client is loaded and sign-in is complete before calling this method.
+    function execute() {
+      return gapi.client.sheets.spreadsheets.values.get({
+        "spreadsheetId": "1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY",
+        "range": "傷害數據!A4:J20"
+      })
+        .then(function (response) {
+          // Handle the results here (response.result has the parsed body).
+          console.log("Response", response);
+        },
+          function (err) { console.error("Execute error", err); });
+    }
+    gapi.load("client:auth2", function () {
+      gapi.auth2.init({ client_id: "CLIENT_ID" });
+    });
+  </script>
+  <button onclick="authenticate().then(loadClient)">authorize and load</button>
+  <button onclick="execute()">execute</button>
 
-        function authenticate() {
-            return gapi.auth2.getAuthInstance()
-                .signIn({ scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/spreadsheets.readonly" })
-                .then(function () { console.log("Sign-in successful"); },
-                    function (err) { console.error("Error signing in", err); });
-        }
-        function loadClient() {
-            gapi.client.setApiKey("YOUR_API_KEY");
-            return gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4")
-                .then(function () { console.log("GAPI client loaded for API"); },
-                    function (err) { console.error("Error loading GAPI client for API", err); });
-        }
-        // Make sure the client is loaded and sign-in is complete before calling this method.
-        function execute() {
-            return gapi.client.sheets.spreadsheets.values.get({
-                "spreadsheetId": "1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY",
-                "range": "傷害數據!A4:J20"
-            })
-                .then(function (response) {
-                    // Handle the results here (response.result has the parsed body).
-                    console.log("Response", response);
-                },
-                    function (err) { console.error("Execute error", err); });
-        }
-        gapi.load("client:auth2", function () {
-            gapi.auth2.init({ client_id: "YOUR_CLIENT_ID" });
-        });
-    </script>
-    <button onclick="authenticate().then(loadClient)">authorize and load</button>
-    <button onclick="execute()">execute</button>
-
-    <div>
-        <input value="get google sheet" type="button" onclick="getSheet()">
-    </div>
-    <div>
-        <input value="顯示資料" type="button" onclick="processFormData()">
-    </div>
-    <div>
-        <form name='form' id='form'>
-            <label for='name'>姓名：</label>
-            <input type='text' name='name' id='name' /> </br>
-            <label for='email'>E-mail：</label>
-            <input type='text' name='email' id='email' /></br>
-            <input type='submit' value='送出' />
-        </form>
-    </div>
-    <div>
-        <input value="按鈕submit 沒有form" type="submit" onclick="window.open(
+  <div>
+    <input value="get google sheet" type="button" onclick="getSheet()">
+  </div>
+  <div>
+    <input value="顯示資料" type="button" onclick="processFormData()">
+  </div>
+  <div>
+    <form name='form' id='form'>
+      <label for='name'>姓名：</label>
+      <input type='text' name='name' id='name' /> </br>
+      <label for='email'>E-mail：</label>
+      <input type='text' name='email' id='email' /></br>
+      <input type='submit' value='送出' />
+    </form>
+  </div>
+  <div>
+    <input value="按鈕submit 沒有form" type="submit" onclick="window.open(
                 'https://www.google.com/',
                 '_blank' // <- This is what makes it open in a new window.
             );">
-        <form action="https://www.google.com/" method="get" target="blank">
-            <input value="按鈕submit 有form" type="submit">
-        </form>
-        <form action="https://www.google.com/" method="get" target="blank">
-            <input value="按鈕button 有form" type="button" onclick="myFunction()">
-        </form>
-        <form action="https://www.google.com/" method="get" target="blank">
-            <input value="按鈕submit 有form有script" type="submit" onclick="myFunction()">
-        </form>
-    </div>
-    <form action="">
-        <label for="search">搜尋內容: </label>
-        <input id="search" name="search" placeholder="請輸入">
-        <input type="submit" value="搜尋">
+    <form action="https://www.google.com/" method="get" target="blank">
+      <input value="按鈕submit 有form" type="submit">
     </form>
-    <form action="">
-        </br></br>
-        <label for="male">Male</label>
-        <input type="radio" name="gender" id="male1" value="male"><br>
-        <label for="female">Female</label>
-        <input type="radio" name="gender" id="female" value="female"><br>
-        <label for="other">Other</label>
-        <input type="radio" name="gender" id="other" value="other"><br><br>
-        <input type="submit" value="Submit">
+    <form action="https://www.google.com/" method="get" target="blank">
+      <input value="按鈕button 有form" type="button" onclick="myFunction()">
     </form>
-    <script>
-        function myFunction() {
-            for (let n = 0; n < 100; n++) {
-                console.log(n);
-            }
-        }
-    </script>
+    <form action="https://www.google.com/" method="get" target="blank">
+      <input value="按鈕submit 有form有script" type="submit" onclick="myFunction()">
+    </form>
+  </div>
+  <form action="">
+    <label for="search">搜尋內容: </label>
+    <input id="search" name="search" placeholder="請輸入">
+    <input type="submit" value="搜尋">
+  </form>
+  <form action="">
+    </br></br>
+    <label for="male">Male</label>
+    <input type="radio" name="gender" id="male1" value="male"><br>
+    <label for="female">Female</label>
+    <input type="radio" name="gender" id="female" value="female"><br>
+    <label for="other">Other</label>
+    <input type="radio" name="gender" id="other" value="other"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+  <script>
+    function myFunction() {
+      for (let n = 0; n < 100; n++) {
+        console.log(n);
+      }
+    }
+  </script>
 </body>
 
 </html>
