@@ -135,8 +135,8 @@
      */
     function listMajors() {
       gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-        range: 'Class Data!A2:E',
+        spreadsheetId: '1EBcGXiIHl34OBzPkJckzal0lDqH-E8AoGgXRCJTodFY',
+        range: '傷害數據!A4:J10',
       }).then(function (response) {
         var range = response.result;
         if (range.values.length > 0) {
@@ -175,7 +175,7 @@
           function (err) { console.error("Error signing in", err); });
     }
     function loadClient() {
-      gapi.client.setApiKey("YOUR_API_KEY");
+      gapi.client.setApiKey("AIzaSyA3mzTtAGCYSoeXscjzb-8XoDUi4v0eUM0");
       return gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4")
         .then(function () { console.log("GAPI client loaded for API"); },
           function (err) { console.error("Error loading GAPI client for API", err); });
@@ -193,7 +193,7 @@
           function (err) { console.error("Execute error", err); });
     }
     gapi.load("client:auth2", function () {
-      gapi.auth2.init({ client_id: "CLIENT_ID" });
+      gapi.auth2.init({ client_id: "663309116969-jahg0ccje82k7p97li09t0rcfcbn2l7b.apps.googleusercontent.com" });
     });
   </script>
   <button onclick="authenticate().then(loadClient)">authorize and load</button>
